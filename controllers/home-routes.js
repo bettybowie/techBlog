@@ -1,24 +1,24 @@
 const router = require('express').Router();
-const { Gallery, Painting } = require('../models');
+const { Comment, Post, User } = require('../models');
 
-// GET all galleries for homepage
+// GET all posts for homepage
 router.get('/', async (req, res) => {
   try {
-    const dbGalleryData = await Gallery.findAll({
+    const postData = await Post.findAll({
       include: [
         {
-          model: Painting,
-          attributes: ['filename', 'description'],
+          model: Comment,
+          attributes: ['content', 'posted on'],
         },
       ],
     });
 
-    const galleries = dbGalleryData.map((gallery) =>
-      gallery.get({ plain: true })
+    const posts = postData.map((post) =>
+      post.get({ plain: true })
     );
     // Send over the 'loggedIn' session variable to the 'homepage' template
     res.render('homepage', {
-      galleries,
+      posts,
       loggedIn: req.session.loggedIn,
     });
   } catch (err) {
@@ -27,8 +27,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET one gallery
-router.get('/gallery/:id', async (req, res) => {
+// GET one user
+router.get('/dashboard/:id', async (req, res) => {
   try {
     const dbGalleryData = await Gallery.findByPk(req.params.id, {
       include: [

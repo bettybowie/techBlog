@@ -1,11 +1,11 @@
 <section class="card">
   <div>
     <div class="card-header">
-      <header>{{title}}</header>
+      <header>{{post.title}}</header>
+      <p>Posted by {{user.username}} on {{format_date post.posted_on}}</p>
     </div>
     <div class="card-body">
-      <p>{{content}}</p>
+      <p>{{post.content}}</p>
     </div>
-    
   </div>
 </section>
