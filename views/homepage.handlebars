@@ -1,13 +1,15 @@
 {{#each posts as |Post|}}
+<a href="/posts/{{id}}">
   <section class="card">
     <div>
       <div class="card-header">
-        <header>{{post.title}}</header>
-        <p>Posted by {{user.username}} on {{format_date post.posted_on}}</p>
+        <header>{{title}}</header>
+        <p>Posted by {{user.username}} on {{format_date posted_on}}</p>
       </div>
       <div class="card-body">
-        <p>{{post.content}}</p>
+        <p>{{content}}</p>
       </div>
     </div>
   </section>
+</a>
 {{/each}}

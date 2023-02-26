@@ -3,7 +3,7 @@ const { response } = require("express");
 const newCommentHandler = async (event) => {
     event.preventDefault();
 
-    const id = document.getElementById('new-comment').getAttribute('data-id');
+    const id = document.getElementById('new-commentBtn').getAttribute('data-id');
     const commentContent = document.getElementById('new-comment').value.trim();
 
     if (id && commentContent) {
@@ -15,7 +15,7 @@ const newCommentHandler = async (event) => {
     };
 
     if(response.ok) {
-        document.location.replace('/');
+        document.location.reload();
     } else {
         console.log(err);
         alert('Failed to add comment.');

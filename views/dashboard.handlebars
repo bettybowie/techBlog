@@ -1,0 +1,27 @@
+{{#if user.posts.length}}
+<section class="container">
+  <section class="flex-row justify-center">
+    {{#each user.posts as |post|}}
+      <section class="card">
+      <a href="/dashboard/{{post.id}}">
+        <header>{{post.title}}</header>
+        <p>Posted on: {{formate_date post.posted_on}}</p>
+        <div class="card-body">
+          <p>{{post.content}}</p>
+        </div>
+        <div class="update-btns">
+          <button id="update" class="btn-no-style" data-id="{{post.id}}">Update</button>
+          <button id="delete" class="btn-no-style" data-id="{{post.id}}">Delete</button>
+        </div>
+      </a>
+      </section>
+    {{/each}}
+  </section>
+</section>
+{{/if}}
+
+
+<footer>
+  <button class="btn-no-style" id="addPostBtn">Add Post</button>
+</footer>
+
