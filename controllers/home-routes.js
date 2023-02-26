@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Comment, Post, User } = require('../models');
+const withAuth = require('../utils/auth');
 
 // GET all posts for homepage
 router.get('/', async (req, res) => {
@@ -10,12 +11,15 @@ router.get('/', async (req, res) => {
           model: Comment,
           attributes: ['content', 'posted on'],
         },
+        {
+          model: User,
+          attributes: ['username'],
+        },
       ],
     });
 
-    const posts = postData.map((post) =>
-      post.get({ plain: true })
-    );
+    const posts = postData.map((post) => post.get({ plain: true }));
+
     // Send over the 'loggedIn' session variable to the 'homepage' template
     res.render('homepage', {
       posts,
@@ -27,57 +31,44 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET one user
-router.get('/dashboard/:id', async (req, res) => {
-  try {
-    const dbGalleryData = await Gallery.findByPk(req.params.id, {
-      include: [
-        {
-          model: Painting,
-          attributes: [
-            'id',
-            'title',
-            'artist',
-            'exhibition_date',
-            'filename',
-            'description',
-          ],
-        },
-      ],
-    });
-
-    const gallery = dbGalleryData.get({ plain: true });
-    // Send over the 'loggedIn' session variable to the 'gallery' template
-    res.render('gallery', { gallery, loggedIn: req.session.loggedIn });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
-  }
-});
-
-// GET one painting
-router.get('/painting/:id', async (req, res) => {
-  try {
-    const dbPaintingData = await Painting.findByPk(req.params.id);
-
-    const painting = dbPaintingData.get({ plain: true });
-    // Send over the 'loggedIn' session variable to the 'homepage' template
-    res.render('painting', { painting, loggedIn: req.session.loggedIn });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
-  }
-});
-
-// Login route
+// login route
 router.get('/login', (req, res) => {
-  // If the user is already logged in, redirect to the homepage
   if (req.session.loggedIn) {
     res.redirect('/');
     return;
   }
-  // Otherwise, render the 'login' template
   res.render('login');
+})
+
+// GET one user's posts
+router.get('/posts/:id', async (req, res) => {
+  try {
+    const postData = await Post.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: [
+            'username',
+          ],
+        },
+        {
+          model: Comment,
+          attributes: ['id', 'content', 'user_id', 'posted_on'],
+        },
+      ],
+    });
+
+    const post = postData.get({ plain: true });
+
+    // Send over the 'loggedIn' session variable to the 'post' template
+    res.render('dashboard', { post, loggedIn: req.session.loggedIn });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
+
+router.get('/')
+
 
 module.exports = router;
