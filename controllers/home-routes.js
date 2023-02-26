@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
       include: [
         {
           model: Comment,
-          attributes: ['content', 'posted on'],
+          attributes: ['content', 'posted_on'],
         },
         {
           model: User,
@@ -40,8 +40,8 @@ router.get('/login', (req, res) => {
   res.render('login');
 })
 
-// GET one user's posts
-router.get('/posts/:id', async (req, res) => {
+// GET single post
+router.get('/posts/:id', withAuth,async (req, res) => {
   try {
     const postData = await Post.findByPk(req.params.id, {
       include: [
@@ -61,14 +61,12 @@ router.get('/posts/:id', async (req, res) => {
     const post = postData.get({ plain: true });
 
     // Send over the 'loggedIn' session variable to the 'post' template
-    res.render('dashboard', { post, loggedIn: req.session.loggedIn });
+    res.render('single-post', { post, loggedIn: req.session.loggedIn });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
 });
-
-router.get('/')
 
 
 module.exports = router;

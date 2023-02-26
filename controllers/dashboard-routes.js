@@ -4,23 +4,14 @@ const withAuth = require('../utils/auth');
 
 router.get('/', async (req, res) => {
     try {
-      const postData = await Post.findAll({
-        include: [
-          {
-            model: Comment,
-            attributes: ['content', 'posted on'],
-          },
-          {
-            model: User,
-            attributes: ['username'],
-          },
-        ],
+      const postData = await Post.findAll( {
+        where: {userId: req.session.userId }
         });
   
       const posts = postData.map((post) => post.get({ plain: true }));
   
       // Send over the 'loggedIn' session variable to the 'homepage' template
-      res.render('homepage', {
+      res.render('dashboard', {
         posts,
         loggedIn: req.session.loggedIn,
       });
