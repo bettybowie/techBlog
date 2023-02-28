@@ -91,7 +91,7 @@ THEN I am able to view comments but I am prompted to log in again before I can a
 
 ## Visual
 
-[Demo Video](Future Heroku Link)
+Deployed Site: https://challenge14-techblog-app.herokuapp.com
 
 ## License
 
